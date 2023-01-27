@@ -6,8 +6,8 @@ class Column:
     name            = None
 
     def __init__(self,value,name):
-        self.value      = value
-        self.name       = name
+        self.setValue(value)
+        self.setName(name)
 
     #setters
     def setValue(self,value):
