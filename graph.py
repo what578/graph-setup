@@ -35,35 +35,21 @@ class Graph:
         self.graphName = name
 
     def createGraph(self):
-        titleRow = ""
-        maxValue = self.maxValue()
         #multiply this by each row to get value scale
-        rowValue = maxValue/self.rows
-        startRows = []
+        rowValue = self.maxValue()/self.rows
         largestStr = self.largestRowString(rowValue)
         bottomRow= self.createBottomRow(largestStr)
         bottomLine = " "*largestStr +   " |"+"_" * (len(bottomRow) + 4)
-        startRows.append(bottomRow)
-        startRows.append(bottomLine)
-        for row in range(1,self.rows+1):
-            currentRowValue = int(row*rowValue)
-            initalRow = f"{currentRowValue}"
-            dif = largestStr - len(initalRow)
-            initalRow += " " * dif + " |"
-            for col in self.columns:
-                initalRow += " "
-                if currentRowValue <= col.value:
-                    initalRow +="[]"
-                else:
-                    initalRow +="  "
 
-            startRows.append(initalRow)
-        emptyRow = ""
-        startRows.append(emptyRow)
-        startRows.append(self.createTitleRow(bottomRow))
+        finalGraph = []
+        finalGraph.append(bottomRow)
+        finalGraph.append(bottomLine)
 
-        self.graph = startRows
-        return None
+        finalGraph = self.createCoreGraph(finalGraph,rowValue,largestStr)
+        finalGraph.append("")
+        finalGraph.append(self.createTitleRow(bottomRow))
+
+        self.graph = finalGraph
     #we will use maxValue to set the value of the rows
     def maxValue(self):
         max = 0
@@ -91,6 +77,23 @@ class Graph:
     def createTitleRow(self,bottomRow):
         titleRow = " " * int(((len(bottomRow)/2)))
         return titleRow + self.graphName
+    def createCoreGraph(self,graphArr,rowValue,largestStr):
+        coreRows = graphArr
+        for row in range(1,self.rows+1):
+            currentRowValue = int(row*rowValue)
+            initalRow = f"{currentRowValue}"
+            dif = largestStr - len(initalRow)
+            initalRow += " " * dif + " |"
+            for col in self.columns:
+                initalRow += " "
+                if currentRowValue <= col.value:
+                    initalRow +="[]"
+                else:
+                    initalRow +="  "
+            coreRows.append(initalRow)
+
+        return coreRows
+
     def printGraph(self):
         for row in numpy.flip(self.graph):
             print(row)
