@@ -1,5 +1,6 @@
 import errorRaiser
 import column
+import numpy
 
 
 
@@ -35,21 +36,35 @@ class Graph:
 
     def createGraph(self):
         titleRow = ""
-        bottomLine= ""
-        bottomRow= ""
         maxValue = self.maxValue()
         #multiply this by each row to get value scale
         rowValue = maxValue/self.rows
         startRows = []
         largestStr = self.largestRowString(rowValue)
+        bottomRow= self.createBottomRow(largestStr)
+        bottomLine = " "*largestStr +   " |"+"_" * (len(bottomRow) + 4)
+        startRows.append(bottomRow)
+        startRows.append(bottomLine)
         for row in range(1,self.rows+1):
-            initalRow = f"{int(row*rowValue)}"
+            currentRowValue = int(row*rowValue)
+            initalRow = f"{currentRowValue}"
             dif = largestStr - len(initalRow)
             initalRow += " " * dif + " |"
+            for col in self.columns:
+                initalRow += " "
+                if currentRowValue <= col.value:
+                    initalRow +="[]"
+                else:
+                    initalRow +="  "
+
             startRows.append(initalRow)
+        emptyRow = ""
+        startRows.append(emptyRow)
+        startRows.append(self.createTitleRow(bottomRow))
+
         self.graph = startRows
         return None
-    #we will use maxValue to set the value of the rows 
+    #we will use maxValue to set the value of the rows
     def maxValue(self):
         max = 0
         for col in self.columns:
@@ -67,20 +82,28 @@ class Graph:
             if x > largestString:
                 largestString = x
         return largestString
-
+    def createBottomRow(self,largestString):
+        space = "  "
+        bottomRow = " " * (largestString) + " "
+        for x in range(len(self.columns)):
+            bottomRow += space + str(x+1)
+        return bottomRow
+    def createTitleRow(self,bottomRow):
+        titleRow = " " * int(((len(bottomRow)/2)))
+        return titleRow + self.graphName
     def printGraph(self):
-        for row in self.graph:
+        for row in numpy.flip(self.graph):
             print(row)
 
 
 
 
 if __name__ == "__main__":
-    rows= 25
+    rows= 20
     graphName = "number of animals"
-    catsCol = column.Column(10,"Cats")
-    dogCol  = column.Column(20,"Dogs")
-    wormCol = column.Column(15,"Worms")
+    catsCol = column.Column(20,"Cats")
+    dogCol  = column.Column(15,"Dogs")
+    wormCol = column.Column(12,"Worms")
     allCol  = [catsCol,dogCol,wormCol]
     g = Graph(rows,graphName,allCol)
     g.createGraph()
