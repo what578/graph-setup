@@ -1,6 +1,7 @@
 import errorRaiser
 import column
 import numpy
+import legend
 
 
 
@@ -9,6 +10,7 @@ class Graph:
     columns     = None
     graphName   = None
     graph       = None
+    legend      = None
 
 
     def __init__(self,rows,graphName,columns= None):
@@ -16,6 +18,7 @@ class Graph:
         self.setGraphName(graphName)
         if columns != None:
             self.setColumns(columns)
+            self.legend = legend.Legend(columns)
 
 
     def setRows(self,rows):
@@ -94,9 +97,23 @@ class Graph:
 
         return coreRows
 
+    #legend
+    def createLegend(self):
+        if self.legend == None:
+            raise Valuerror("cannot make legend out of NoneType, check columns")
+        self.legend.createLegend()
+
+    def printLegend(self):
+        self.legend.printLegend()
+
     def printGraph(self):
+        if self.graph == None:
+            raise Valuerror("NoneType cannot be printed be sure to create graph first")
         for row in numpy.flip(self.graph):
             print(row)
+    def printGraphAndLegend(self):
+        self.printLegend()
+        self.printGraph()
 
 
 
@@ -110,4 +127,5 @@ if __name__ == "__main__":
     allCol  = [catsCol,dogCol,wormCol]
     g = Graph(rows,graphName,allCol)
     g.createGraph()
-    g.printGraph()
+    g.createLegend()
+    g.printGraphAndLegend()

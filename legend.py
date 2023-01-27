@@ -18,9 +18,9 @@ class Legend:
     def createLegend(self):
         largestStr = self.largestStr()
         legend     = []
-        legend.append(self.creatBotOfLegend(largestStr))
-        legend = self.createCoreOfLegend(legend,largestStr)
         legend.append(self.createTopofLegend(largestStr))
+        legend = self.createCoreOfLegend(legend,largestStr)
+        legend.append(self.creatBotOfLegend(largestStr))
         self.legend=legend
     def createTopofLegend(self,largestStr):
         return " "+ "_" * (largestStr + 5)
@@ -45,7 +45,9 @@ class Legend:
                 largestStr = len(col.name)
         return largestStr
     def printLegend(self):
-        for row in numpy.flip(self.legend):
+        if self.legend == None:
+            raise ValueError("NoneType cannot be printed")
+        for row in self.legend:
             print(row)
 
 if __name__ == "__main__":
